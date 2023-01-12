@@ -9,18 +9,29 @@ int ledval = 0;
 
 boolean newData = false;
 
+unsigned long prevMillis = 0;
+
 //============
 
 void setup() {
     Serial.begin(9600);
-    pinMode(13,OUTPUT);
-    pinMode(12,OUTPUT);
+    pinMode(2,OUTPUT);
+    pinMode(3,OUTPUT);
+    pinMode(4,INPUT);
 
 }
 
 //============
 
 void loop() {
+
+   if(millis() - prevMillis > 300){
+     prevMillis = millis();
+
+     Serial.print("<SW1,");
+     Serial.print(digitalRead(4));
+     Serial.println(",>");
+   }
     recvWithStartEndMarkers();
     if (newData == true) {
         strcpy(tempChars, receivedChars);
@@ -88,11 +99,11 @@ void parseData() {      // split the data into its parts
 void processData() {
 
     if(lednum == 1){
-      digitalWrite(13,ledval);
+      digitalWrite(2,ledval);
     }
 
     if(lednum == 2){
-       digitalWrite(12,ledval);
+       digitalWrite(3,ledval);
     
     }
 }
